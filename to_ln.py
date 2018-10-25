@@ -1,5 +1,5 @@
 # reads a csv file, transforms a numerical column into a series of log values,
-# will write the original data plus the new column of log returns back into the
+# will write the original data plus the new column of log values back into the
 # original file. must specify file at command-line runtime.
 #
 # Changelog:
