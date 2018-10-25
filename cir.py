@@ -53,6 +53,57 @@ def return_cir(a, mu, dt, sigma, n, cc = 0, df = True):
     # else return ndarrays as a tuple
     return (x, y)
 
+# cir calibrating function
+# given a time series (preferred is a pandas series or ndarray), assume process is normal
+# and then find the sample mean (mu), sample stddev (sigma), no. elements (n; can be
+# scaled with parameter n_scale which is 1 by default), speed of mean reversion (a), and
+# default timestep (dt; can be scaled with parameter dt_scale which is 1 by default);
+# returns list [a, mu, dt, sigma, n]
+def calibrate_cir(ts, dt_scale = 1, n_scale = 1):
+    # forcibly convert data to numeric data
+    ts = pd.to_numeric(ts, errors = "coerce")
+    # total number of indices (also the n we will return)
+    n = ts.size
+    # get sample mean, ignoring NaN values (note the total values used in this calculation
+    # will be certainly <= n)
+    mu = np.nanmean(ts)
+    # get sample standard deviation
+    sigma = np.nanstd(ts)
+    # calculate dt; by default dt is 1 / n (can multiply by dt_scale)
+    dt = dt_scale / n
+    # calcuate a: a = 1 / (sum(i = 0, j - 1: t_i)) * (j - 1), where t_i is the time to
+    # mean reversion for each interval of mean reversion
+    # number of intervals
+    j = 0
+    # number of units in interval
+    t_i = 0
+    # a (speed of mean reversion)
+    a = 0
+    # current level of rate
+    cr = ts[0]
+    # previous level of rate
+    pr = ts[0]
+    # for each element in ts, starting from first
+    for i in range(1, n):
+        # get current rate; can be np.nan
+        cr = ts[i]
+        # increment t_i
+        t_i += 1
+        # if the mean reversion interval has elapsed (cr cannot be NaN)
+        if (not math.isnan(cr) and ((cr < mu and pr > mu) or (cr > mu and pr < mu))):
+            # increment number of mean reversion intervals
+            j += 1
+            # add t_i to a
+            a += t_i
+            # reset t_i to 0
+            t_i = 0
+            # assign value of cr to pr
+            pr = cr
+    # calculate a (use sample average to correct for sample, and decrease reversion speed)
+    a = (j - 1) / a
+    # return [a, mu, dt, sigma, n * n_scale] (n is scaled by n_scale)
+    return [a, mu, dt, sigma, n * n_scale]
+
 # main
 if (__name__ == "__main__"):
     print("{}: do not run in standalone mode.".format(PROGNAME))
