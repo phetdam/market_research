@@ -10,7 +10,7 @@
 #
 # 10-25-2018
 #
-# added note about normally-distributed nature of model
+# added note about normally-distributed nature of model; added function calibrate_cir
 #
 # 10-24-2018
 #
