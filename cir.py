@@ -1,12 +1,16 @@
 # basic implementation of a cox-ingersol-ross single-factor short rate model
 # https://en.wikipedia.org/wiki/Cox-Ingersoll-Ross_model
 #
-# implementation of model:
+# implementation of model (differential changes in r are assumed normal):
 #
 # dr = a * (mu - r) * dt + sigma * math.sqrt(r) * np.random.normal() * math.sqrt(dt)
 # we assume that dW is driven by z * sqrt(dt), where z ~ N(0, 1)
 #
 # Changelog:
+#
+# 10-25-2018
+#
+# added note about normally-distributed nature of model
 #
 # 10-24-2018
 #
