@@ -37,7 +37,7 @@ QUIET = False
 CSV_EXT = ".csv"
 
 # help string
-HELP_STR = ("Usage: {0} [ file col ]\n"
+HELP_STR = ("Usage: {0} [ file col [ --quiet ] ]\n"
             "given a {1} file with labeled columns, and a column label that\n"
             "matches a column with numerical data, transform the column into\n"
             "a series of log returns and add the new numerical series to the\n"
