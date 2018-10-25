@@ -5,7 +5,7 @@
 # 10-25-2018
 #
 # renamed log_transform.py and associated targets to to_lnr.py, added
-# target for to_ln
+# target for to_ln, nn_shift
 #
 # 10-24-2018
 #
@@ -23,6 +23,7 @@ CIR_MAIN_PY = cir_main.py
 CIR_MAIN_DEPS = cir.py
 TO_LN_PY = to_ln.py
 TO_LNR_PY = to_lnr.py
+NN_SHIFT_PY = nn_shift.py
 
 # args for cir_main
 CIR_MAIN_ARGS = #--help
@@ -30,6 +31,8 @@ CIR_MAIN_ARGS = #--help
 TO_LN_ARGS = ./rate_data/treasury_3m_rates_1981-2018.csv DTB3 --quiet
 # args for to_lnr
 TO_LNR_ARGS = ./rate_data/treasury_3m_rates_1981-2018.csv DTB3 --quiet
+# args for nn_shift
+NN_SHIFT_ARGS = ./rate_data/treasury_3m_rates_1981-2018.csv DTB3 --quiet 0.03
 
 # dummy target
 dummy:
@@ -45,6 +48,12 @@ to_ln: $(TO_LN_PY)
 # to_lnr (transforms single column time series into a series of log returns)
 to_lnr: $(TO_LNR_PY)
 	$(PYC) $(PYFLAGS) $(TO_LNR_PY) $(TO_LNR_ARGS)
+
+# nn_shift (takes the absolute value of the most negative value and shifts
+# all values by that value, or if given a particular integer (must be > 0),
+# will shift all values by that value)
+nn_shift: $(NN_SHIFT_PY)
+	$(PYC) $(PYFLAGS) $(NN_SHIFT_PY) $(NN_SHIFT_ARGS)
 
 # clean
 clean:
