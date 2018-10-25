@@ -20,7 +20,7 @@ HELP_FLAG = "--help"
 
 # help string
 HELP_STR = ("Usage: {0}\n       {0} {1}\n"
-            "simulates a single run of a CIR process. more to come later!".format(PROGNAME, HELP_FLAG)
+            "simulates a single run of two CIR processes.".format(PROGNAME, HELP_FLAG)
     )
 
 # default file to save to
