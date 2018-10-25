@@ -1,19 +1,14 @@
 # contains basic implementation of a cox-ingersol-ross single-factor short rate model
 # https://en.wikipedia.org/wiki/Cox-Ingersoll-Ross_model
 #
-# implementation of model:
-#
-# dr = a * (mu - r) * dt + sigma * math.sqrt(r) * np.random.normal() * math.sqrt(dt)
-# we assume that dW is driven by z * sqrt(dt), where z ~ N(0, 1)
-#
 # Changelog:
 #
 # 10-24-2018
 #
-# initial creation; git commit. renamed to cir_main.py
+# initial creation; git commit. renamed to cir_main.py, modified usage, cleaned a little
 
 # program name
-PROGNAME = "cir"
+PROGNAME = "cir_main"
 
 # help flag
 HELP_FLAG = "--help"
