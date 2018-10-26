@@ -178,7 +178,7 @@ if (__name__ == "__main__"):
     print(CIR_PARAM)
         
     # create figure and plot processes
-    # figure size width 12', height 9'
+    # figure size width 12", height 9"
     fg = plt.figure(figsize = (12, 9))
     # for CIR_N iterations
     for i in range(CIR_N):
