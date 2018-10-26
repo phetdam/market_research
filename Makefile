@@ -6,7 +6,13 @@
 #
 # added more variables for data file names (so i don't have to keep
 # copy-pasting them over and over again), and added data for new files
-# containing yields on high yield bonds
+# containing yields on high yield bonds. modified cir_main arguments
+# so that each of run of cir_main calibrates a cir process to the input
+# data, and runs the number of processes specified at the command line.
+#
+# note: be careful with spaces! newlines will be turned into a single
+# space, which may cause a single argument to be interpreted as multiple
+# arguments in the command line.
 #
 # 10-25-2018
 #
@@ -32,22 +38,24 @@ TO_LNR_PY = to_lnr.py
 NN_SHIFT_PY = nn_shift.py
 
 # args for cir_main
-CIR_MAIN_ARGS = #--help
+#CIR_MAIN_ARGS = -cf=$(RATES_DDIR)/$(TB_Y0_CSV):DTB3 -np=5
+CIR_MAIN_ARGS = -cf=$(RATES_DDIR)/$(HY_Y0_CSV):BAMLHY -np=5
 # args for to_ln
 TO_LN_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for to_lnr
 TO_LNR_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for nn_shift
+# manual shift for treasury data to get rates above 0
 #NN_SHIFT_ARGS = $(RATES_DDIR)/$(TB_Y0_CSV) DTB3 --quiet 0.03
 NN_SHIFT_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 
 # other variables
 # ./rate_data directory
 RATES_DDIR = ./rate_data
-# 3m treasury yields file (1981-2018)
-TB_Y0_CSV = treasury_3m_yield_1981-2018.csv # DTB3 (data column header)
-# ice boaml high yield yields (1996-2018)
-HY_Y0_CSV = ice-boaml_us_hy_yield_1996-2018.csv # BAMLHY (data column header, renamed)
+# 3m treasury yields file (1981-2018), DTB3 is main data column
+TB_Y0_CSV = treasury_3m_yield_1981-2018.csv
+# ice boaml high yield yields (1996-2018), BAMLHY is renamed main data col 
+HY_Y0_CSV = ice-boaml_us_hy_yield_1996-2018.csv
 
 # dummy target
 dummy:
