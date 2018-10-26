@@ -8,6 +8,13 @@
 #
 # Changelog:
 #
+# 10-26-2018
+#
+# made modification to return_cir(); if r ever drops below 0, r will be forcibly
+# corrected back to 0. this is due to r sometimes becoming ever so slightly negative
+# with some data such as those of treasury bills, where rates were slightly negative
+# for a short file.
+#
 # 10-25-2018
 #
 # added note about normally-distributed nature of model; added function calibrate_cir
@@ -47,6 +54,9 @@ def return_cir(a, mu, dt, sigma, n, cc = 0, df = True):
         dr = a * (mu - r) * dt + sigma * math.sqrt(r) * np.random.normal() * math.sqrt(dt)
         # add change of dr to r
         r += dr
+        # if r < 0, set it back to 0; cir processes cannot deal with negative rates
+        if (r < 0):
+            r = 0
     # if df is True, wrap in dataframe and return (label as cir_(cc))
     if (df == True):
         return pd.DataFrame(index = x, data = y, columns = ["cir_{}".format(cc)])
