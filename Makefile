@@ -2,6 +2,12 @@
 #
 # Changelog:
 #
+# 10-26-2018
+#
+# added more variables for data file names (so i don't have to keep
+# copy-pasting them over and over again), and added data for new files
+# containing yields on high yield bonds
+#
 # 10-25-2018
 #
 # renamed log_transform.py and associated targets to to_lnr.py, added
@@ -28,11 +34,20 @@ NN_SHIFT_PY = nn_shift.py
 # args for cir_main
 CIR_MAIN_ARGS = #--help
 # args for to_ln
-TO_LN_ARGS = ./rate_data/treasury_3m_yield_1981-2018.csv DTB3 --quiet
+TO_LN_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for to_lnr
-TO_LNR_ARGS = ./rate_data/treasury_3m_yield_1981-2018.csv DTB3 --quiet
+TO_LNR_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for nn_shift
-NN_SHIFT_ARGS = ./rate_data/treasury_3m_yield_1981-2018.csv DTB3 --quiet 0.03
+#NN_SHIFT_ARGS = $(RATES_DDIR)/$(TB_Y0_CSV) DTB3 --quiet 0.03
+NN_SHIFT_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
+
+# other variables
+# ./rate_data directory
+RATES_DDIR = ./rate_data
+# 3m treasury yields file (1981-2018)
+TB_Y0_CSV = treasury_3m_yield_1981-2018.csv # DTB3 (data column header)
+# ice boaml high yield yields (1996-2018)
+HY_Y0_CSV = ice-boaml_us_hy_yield_1996-2018.csv # BAMLHY (data column header, renamed)
 
 # dummy target
 dummy:
