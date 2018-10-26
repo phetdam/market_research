@@ -13,7 +13,8 @@
 # made modification to return_cir(); if r ever drops below 0, r will be forcibly
 # corrected back to 0. this is due to r sometimes becoming ever so slightly negative
 # with some data such as those of treasury bills, where rates were slightly negative
-# for a short file.
+# for a short file. corrected return_cir() by adding a parameter r_i which indicates
+# the starting value of r; by default r_i = mu.
 #
 # 10-25-2018
 #
@@ -36,10 +37,14 @@ PROGNAME = "cir"
 # dt is the differential timestep, and n is the number of times to loop
 # by default, returns dataframe, but if df = False, will return tuple of ndarrays (x, y)
 # unless specified otherwise, will always assume the cir process it returns is the first
-# one being created (can specify number with cc = x)
-def return_cir(a, mu, dt, sigma, n, cc = 0, df = True):
-    # starting point of r assumed to be mu
-    r = mu
+# one being created (can specify number with cc = x). r_i is starting value (default None),
+# that can be specified when return_cir is called. will default to mu if not specified.
+def return_cir(a, mu, dt, sigma, n, r_i = None, cc = 0, df = True):
+    # if r_i is None, set r_i to mu
+    if (r_i is None):
+        r_i = mu
+    # initialize r with r_i
+    r = r_i
     # differential change of r dr starts as 0
     dr = 0
     # np array for the x axis (time)
