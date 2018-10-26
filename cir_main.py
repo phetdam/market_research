@@ -7,7 +7,9 @@
 #
 # added additional flags and modes. can be calibrated off of a calibration file with
 # flag -cf=file_name:data_col, and run k processes with flag -np=k. basically added a
-# big chunk of boilerplate code to catch input errors.
+# big chunk of boilerplate code to catch input errors. changed parameters from being
+# displayed in the legend for each individual process to being displayed in the title;
+# all processed in one graph have the same parameters anyways.
 #
 # 10-24-2018
 #
