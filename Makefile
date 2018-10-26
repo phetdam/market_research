@@ -28,11 +28,11 @@ NN_SHIFT_PY = nn_shift.py
 # args for cir_main
 CIR_MAIN_ARGS = #--help
 # args for to_ln
-TO_LN_ARGS = ./rate_data/treasury_3m_rates_1981-2018.csv DTB3 --quiet
+TO_LN_ARGS = ./rate_data/treasury_3m_yield_1981-2018.csv DTB3 --quiet
 # args for to_lnr
-TO_LNR_ARGS = ./rate_data/treasury_3m_rates_1981-2018.csv DTB3 --quiet
+TO_LNR_ARGS = ./rate_data/treasury_3m_yield_1981-2018.csv DTB3 --quiet
 # args for nn_shift
-NN_SHIFT_ARGS = ./rate_data/treasury_3m_rates_1981-2018.csv DTB3 --quiet 0.03
+NN_SHIFT_ARGS = ./rate_data/treasury_3m_yield_1981-2018.csv DTB3 --quiet 0.03
 
 # dummy target
 dummy:
