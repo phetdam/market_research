@@ -2,6 +2,12 @@
 #
 # Changelog:
 #
+# 10-27-2018
+#
+# changed CIR_MAIN_DEPS to short_rate_1f.py, reflecting the change in
+# name of cir.py to sr1fsim.py. added additional argument for specifying
+# the type of model used in the simulation
+#
 # 10-26-2018
 #
 # added more variables for data file names (so i don't have to keep
@@ -31,15 +37,15 @@ PYC = python
 PYFLAGS = 
 
 # targets and dependencies
-CIR_MAIN_PY = cir_main.py
-CIR_MAIN_DEPS = cir.py
+SR1FSIM_PY = sr1fsim.py
+SR1FSIM_DEPS = short_rate_1f.py
 TO_LN_PY = to_ln.py
 TO_LNR_PY = to_lnr.py
 NN_SHIFT_PY = nn_shift.py
 
-# args for cir_main
-#CIR_MAIN_ARGS = -cf=$(RATES_DDIR)/$(TB_Y0_CSV):DTB3 -np=5
-CIR_MAIN_ARGS = -cf=$(RATES_DDIR)/$(HY_Y0_CSV):BAMLHY -np=5
+# args for sr1fsim
+#SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
+SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(HY_Y0_CSV):BAMLHY -mt=vas -np=5
 # args for to_ln
 TO_LN_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for to_lnr
@@ -56,13 +62,16 @@ RATES_DDIR = ./rate_data
 TB_Y0_CSV = treasury_3m_yield_1981-2018.csv
 # ice boaml high yield yields (1996-2018), BAMLHY is renamed main data col 
 HY_Y0_CSV = ice-boaml_us_hy_yield_1996-2018.csv
+# ice boaml bbb option-adjusted spread (1996-2018), BAMLBBB is the main
+# data column (renamed from original)
+BBB_OAS0_CSV = ice-boaml_us_bbb_oas_1996-2018.csv
 
 # dummy target
 dummy:
 
-# cir_main (python script to mimic cir process; uses cir.py)
-cir_main: $(CIR_MAIN_PY) $(CIR_MAIN_DEPS) # i think this is unnecessary lol
-	$(PYC) $(PYFLAGS) $(CIR_MAIN_PY) $(CIR_MAIN_ARGS)
+# sr1fsim (python script to simulate short rate using one-factor model)
+sr1fsim: $(SR1FSIM_PY) $(SR1FSIM_DEPS) # helps catch name changess
+	$(PYC) $(PYFLAGS) $(SR1FSIM_PY) $(SR1FSIM_ARGS)
 
 # to_ln (transforms values into log values)
 to_ln: $(TO_LN_PY)
