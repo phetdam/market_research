@@ -56,7 +56,7 @@ import pandas as pd
 import numpy as np
 
 # program name
-PROGNAME = "sr_1f"
+PROGNAME = "short_rate_1f"
 
 # cir generating function
 # driven by sigma, with a to govern speed of mean reversion, while mu establishes the mean
