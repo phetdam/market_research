@@ -9,7 +9,7 @@
 # added additional flag to specify the model to run (vasicek or cir). if model is not
 # specified, the default process will be a vasicek model. changed several variable
 # names and file name (from cir_main.py to sr1fsim.py) to reflect the more general
-# nature of the file. added plot title dict, list of acceptable models, etc.
+# nature of the file. added list of acceptable models and some other variables.
 #
 # 10-26-2018
 #
