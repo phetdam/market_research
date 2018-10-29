@@ -44,8 +44,8 @@ TO_LNR_PY = to_lnr.py
 NN_SHIFT_PY = nn_shift.py
 
 # args for sr1fsim
-#SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
-SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(HY_Y0_CSV):BAMLHY -mt=vas -np=5
+SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
+#SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(HY_Y0_CSV):BAMLHY -mt=cir -np=5
 # args for to_ln
 TO_LN_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for to_lnr
