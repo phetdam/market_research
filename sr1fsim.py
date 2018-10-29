@@ -4,6 +4,10 @@
 #
 # Changelog:
 #
+# 10-29-2018
+#
+# removed PL_TITLES; the title of each plot will simply be MTYPE
+#
 # 10-27-2018
 #
 # added additional flag to specify the model to run (vasicek or cir). if model is not
@@ -49,9 +53,6 @@ VAS_N = "vas"
 
 # acceptable model types to pass to MT_FLAG
 MTYPES = [CIR_N, VAS_N]
-
-# titles for different plots generated
-PL_TITLES = {CIR_N: "CIR", VAS_N: "Vasicek"}
 
 # help string
 HELP_STR = ("Usage: {0} [ [ {1}=csv_file:data_col ] [ {2}=model ] [ {3}=k ] ]\n"
