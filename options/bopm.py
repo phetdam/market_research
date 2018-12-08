@@ -19,7 +19,7 @@ import numpy as np
 LIB_NAME = "bopm"
 
 # function names
-RETURN_BOPM_PRICE_N = "return_bopm_price"
+OPTION_PRICE_N = "option_price"
 
 # allowable option types
 __option_types = ["call", "put"]
@@ -46,37 +46,37 @@ def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "europea
     # cannot have negative underlying price
     if (S_ < 0):
         raise ValueError("{0}.{1}: error: initial underlying price cannot be "
-                         "negative".format(LIB_NAME, RETURN_BOPM_PRICE_N))
+                         "negative".format(LIB_NAME, OPTION_PRICE_N))
     # cannot have negative volatility
     if (sigma < 0):
         raise ValueError("{0}.{1}: error: volatility of underlying cannot be "
-                         "negative".format(LIB_NAME, RETURN_BOPM_PRICE_N))
+                         "negative".format(LIB_NAME, OPTION_PRICE_N))
     # warning if negative risk-free rate is passed
     if (r < 0):
         print("{0}.{1}: warning: negative risk-free rate".format(LIB_NAME,
-                                                                 RETURN_BOPM_PRICE_N))
+                                                                 OPTION_PRICE_N))
     # cannot have negative strike price
     if (K < 0):
         raise ValueError("{0}.{1}: error: strike price cannot be negative".format(
-            LIB_NAME, RETURN_BOPM_PRICE_N))
+            LIB_NAME, OPTION_PRICE_N))
     # cannot have negative T_
     if (T_ < 0):
         raise ValueError("{0}.{1}: error: cannot have negative time to expiration".format(
-            LIB_NAME, RETURN_BOPM_PRICE_N))
+            LIB_NAME, OPTION_PRICE_N))
     # if is_type is not in __option_types
     if (is_type not in __option_types):
         raise ValueError("{0}.{1}: error: option type can only be {2}".format(
-            LIB_NAME, RETURN_BOPM_PRICE_N, __option_types))
+            LIB_NAME, OPTION_PRICE_N, __option_types))
     # if flavor is not in __option_flavors
     if (flavor not in __option_flavors):
         raise ValueError("{0}.{1}: error: option flavor can only be {2}".format(
-            LIB_NAME, RETURN_BOPM_PRICE_N, __option_flavors))
+            LIB_NAME, OPTION_PRICE_N, __option_flavors))
     # number of days until option expiration is 30 * T_
     n = 30 * T_
     # if n is fractional, print error and exit
     if (int(n) != float(n)):
         raise ValueError("{0}.{1}: error: cannot have fractional number of days to "
-                         "expiration".format(LIB_NAME, RETURN_BOPM_PRICE_N))
+                         "expiration".format(LIB_NAME, OPTION_PRICE_N))
     # size of time step is equal to one day; units must be in years)
     dt = 1 / 360
     # number of final nodes for option values is n + 1
