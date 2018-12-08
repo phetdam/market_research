@@ -41,7 +41,7 @@ __option_flavors = ["american", "european"]
 # flavor    style of option: can be "american", "european" (default "european")
 #
 # returns the price of the option at time 0 (now)
-def _bopm_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "european"):
+def bopm_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "european"):
     # cannot have negative underlying price
     if (S_ < 0):
         raise ValueError("{0}.{1}: error: initial underlying price cannot be "
