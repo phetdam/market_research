@@ -8,7 +8,8 @@
 #
 # initial creation. currently generates european and american options prices. issues:
 # prices are usually ~$0.10 cheaper than those in the original cox/ross/rubenstein
-# paper. not sure of problem root; dt scaling is appropriate.
+# paper. not sure of problem root; dt scaling is appropriate. changed name of method
+# to option_price.
 #
 
 import math
@@ -41,7 +42,7 @@ __option_flavors = ["american", "european"]
 # flavor    style of option: can be "american", "european" (default "european")
 #
 # returns the price of the option at time 0 (now)
-def bopm_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "european"):
+def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "european"):
     # cannot have negative underlying price
     if (S_ < 0):
         raise ValueError("{0}.{1}: error: initial underlying price cannot be "
