@@ -2,6 +2,11 @@
 #
 # Changelog:
 #
+# 12-07-2018
+#
+# moved data files to overall data directory ../data; changed file refs
+# in all targets. changed targets to target names only.
+#
 # 10-27-2018
 #
 # changed CIR_MAIN_DEPS to short_rate_1f.py, reflecting the change in
@@ -36,28 +41,28 @@ CFLAGS = -Wall -g
 PYC = python
 PYFLAGS = 
 
-# targets and dependencies
-SR1FSIM_PY = sr1fsim.py
+# targets
+SR1FSIM_T = sr1fsim
 SR1FSIM_DEPS = short_rate_1f.py
-TO_LN_PY = to_ln.py
-TO_LNR_PY = to_lnr.py
-NN_SHIFT_PY = nn_shift.py
+TO_LN_T = to_ln
+TO_LNR_T = to_lnr
+NN_SHIFT_T = nn_shift
 
 # args for sr1fsim
-SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
-#SR1FSIM_ARGS = -cf=$(RATES_DDIR)/$(HY_Y0_CSV):BAMLHY -mt=cir -np=5
+SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
+#SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(HY_Y0_CSV):BAMLHY -mt=cir -np=5
 # args for to_ln
-TO_LN_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
+TO_LN_ARGS = $(DATA_DIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for to_lnr
-TO_LNR_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
+TO_LNR_ARGS = $(DATA_DIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for nn_shift
 # manual shift for treasury data to get rates above 0
-#NN_SHIFT_ARGS = $(RATES_DDIR)/$(TB_Y0_CSV) DTB3 --quiet 0.03
-NN_SHIFT_ARGS = $(RATES_DDIR)/$(HY_Y0_CSV) BAMLHY --quiet
+#NN_SHIFT_ARGS = $(DATA_DIR)/$(TB_Y0_CSV) DTB3 --quiet 0.03
+NN_SHIFT_ARGS = $(DATA_DIR)/$(HY_Y0_CSV) BAMLHY --quiet
 
 # other variables
-# ./rate_data directory
-RATES_DDIR = ./rate_data
+# overall data directory
+DATA_DIR = ../data
 # 3m treasury yields file (1981-2018), DTB3 is main data column
 TB_Y0_CSV = treasury_3m_yield_1981-2018.csv
 # ice boaml high yield yields (1996-2018), BAMLHY is renamed main data col 
@@ -70,22 +75,22 @@ BBB_OAS0_CSV = ice-boaml_us_bbb_oas_1996-2018.csv
 dummy:
 
 # sr1fsim (python script to simulate short rate using one-factor model)
-sr1fsim: $(SR1FSIM_PY) $(SR1FSIM_DEPS) # helps catch name changess
-	$(PYC) $(PYFLAGS) $(SR1FSIM_PY) $(SR1FSIM_ARGS)
+$(SR1FSIM_T): $(SR1FSIM_T).py $(SR1FSIM_DEPS) # helps catch name changess
+	$(PYC) $(PYFLAGS) $(SR1FSIM_T).py $(SR1FSIM_ARGS)
 
 # to_ln (transforms values into log values)
-to_ln: $(TO_LN_PY)
-	$(PYC) $(PYFLAGS) $(TO_LN_PY) $(TO_LN_ARGS)
+$(TO_LN_T): $(TO_LN_T).py
+	$(PYC) $(PYFLAGS) $(TO_LN_T).py $(TO_LN_ARGS)
 
 # to_lnr (transforms single column time series into a series of log returns)
-to_lnr: $(TO_LNR_PY)
-	$(PYC) $(PYFLAGS) $(TO_LNR_PY) $(TO_LNR_ARGS)
+$(TO_LNR_T): $(TO_LNR_T).py
+	$(PYC) $(PYFLAGS) $(TO_LNR_T).py $(TO_LNR_ARGS)
 
 # nn_shift (takes the absolute value of the most negative value and shifts
 # all values by that value, or if given a particular integer (must be > 0),
 # will shift all values by that value)
-nn_shift: $(NN_SHIFT_PY)
-	$(PYC) $(PYFLAGS) $(NN_SHIFT_PY) $(NN_SHIFT_ARGS)
+$(NN_SHIFT_T): $(NN_SHIFT_T).py
+	$(PYC) $(PYFLAGS) $(NN_SHIFT_T) $(NN_SHIFT_ARGS)
 
 # clean
 clean:
