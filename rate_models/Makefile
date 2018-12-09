@@ -2,6 +2,9 @@
 #
 # Changelog:
 #
+# moved sr1fsim.py to market_research level Makefile. removed targets
+# from this Makefile
+#
 # 12-07-2018
 #
 # moved data files to overall data directory ../data; changed file refs
@@ -42,15 +45,10 @@ PYC = python
 PYFLAGS = 
 
 # targets
-SR1FSIM_T = sr1fsim
-SR1FSIM_DEPS = short_rate_1f.py
 TO_LN_T = to_ln
 TO_LNR_T = to_lnr
 NN_SHIFT_T = nn_shift
 
-# args for sr1fsim
-SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
-#SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(HY_Y0_CSV):BAMLHY -mt=cir -np=5
 # args for to_ln
 TO_LN_ARGS = $(DATA_DIR)/$(HY_Y0_CSV) BAMLHY --quiet
 # args for to_lnr
@@ -73,10 +71,6 @@ BBB_OAS0_CSV = ice-boaml_us_bbb_oas_1996-2018.csv
 
 # dummy target
 dummy:
-
-# sr1fsim (python script to simulate short rate using one-factor model)
-$(SR1FSIM_T): $(SR1FSIM_T).py $(SR1FSIM_DEPS) # helps catch name changess
-	$(PYC) $(PYFLAGS) $(SR1FSIM_T).py $(SR1FSIM_ARGS)
 
 # to_ln (transforms values into log values)
 $(TO_LN_T): $(TO_LN_T).py
