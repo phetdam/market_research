@@ -61,9 +61,9 @@ __IMG__EXTS = [".jpg", ".png"]
 #
 # returns the saved figure
 def xy_plot(gs__, w = 8, h = 4.5, fout = None, ll__ = None, xlab = "default_xlab",
-         ylab = "default_ylab", plab = "default_plab", title = "default_title",
-         fontsize_x = None, fontsize_y = None, fontsize_t = None, tilt_y = 90,
-         hide_x = False, hide_y = False):
+            ylab = "default_ylab", title = "default_title", fontsize_x = None,
+            fontsize_y = None, fontsize_t = None, tilt_y = 90, hide_x = False,
+            hide_y = False):
     # if fout is not None
     if (fout != None):
         # if fout does not have an extension in __IMG__EXTS, raise error
