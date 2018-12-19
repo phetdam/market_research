@@ -2,6 +2,10 @@
 #
 # Changelog:
 #
+# 12-19-2018
+#
+# added target for config file used by options_grapher
+#
 # 12-09-2018
 #
 # initial creation. includes targets for sr1fsim and options_grapher.
@@ -29,7 +33,7 @@ SR1FSIM_DEPS = $(RATE_MODELS_DIR)/short_rate_1f.py
 # args
 SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
 #SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(HY_Y0_CSV):BAMLHY -mt=cir -np=5
-OPTIONS_GRAPHER_ARGS =
+OPTIONS_GRAPHER_ARGS = ./options/spy_03-15-2019_bopm.ogc
 
 # other variables
 # 3m treasury yields file (1981-2018), DTB3 is main data column
