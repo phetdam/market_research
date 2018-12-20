@@ -18,11 +18,15 @@
 # __file__: file_1.csv: xcol_1, ycol_1, series_label_1; \
 #                       xcol_2, ycol_2, series_label_2; \
 #                       ... xcol_k, ycol_k, series_label_k
-# # note that columns can be repeated in any of these pairs, but must exist in the
-# # .csv file and must also be of the same length or an error will be thrown. you
-# # can break lines with the explicit '\' character. however, if '\' has text
-# # following it, you will probably have an error thrown. hehe. note that the
-# # final semicolon (omitted here) is optional.
+# note that columns can be repeated in any of these pairs, but must exist in the
+# .csv file and must also be of the same length or an error will be thrown. you
+# can break lines with the explicit '\' character. however, if '\' has text
+# following it, you will probably have an error thrown. hehe. note that the
+# final semicolon (omitted here) is optional.
+#
+# if there is no series label given, the name of the y column will be used instead.
+# note that any y-series being plotted should be a PRICE SERIES because the script
+# will be graphing calculated options prices.
 #
 # also make sure somewhere in the file after __xyc__ and before __end__ is the
 # __params__ tag, which defines parameters for the graph x, y, and title values.
@@ -30,11 +34,21 @@
 #
 # __params__: x_label, y_label, plot_title;
 #
-# # the final semicolon may also be omitted.
+# the final semicolon may be omitted.
 #
-# if there is no series label given, the name of the y column will be used instead.
-# note that any y-series being plotted should be a PRICE SERIES because the script
-# will be graphing calculated options prices.
+# the __format__ tag is required: you can either put a single or multiple graph
+# formatting specifiers, according to pyplot plot() method standards, which can be
+# found at: https://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
+#
+# a special format specifier is defined in fast_plot.AUTO_FORMAT, which will let
+# the pyplot.plot() method automatically figure out colors and will result in a
+# basic line graph out of the box. sample format:
+#
+# __format__: r^, ^, mo;
+#
+# the final semicolon may also be omitted. note that if there is more than one
+# format specifier, the number must equal the number of xy-series being graphed,
+# or else a GraphFormatError will be raised.
 #
 # the config file should be ended with the singular tag "__end__", which should be put
 # on its own line. failure to include this tag will result in the parser (hopefully)
@@ -42,9 +56,15 @@
 #
 # Changelog:
 #
+# 12-20-2018
+#
+# completed parser, which can now accept format specifiers for the type of graph to
+# be displayed. added GraphFormatError as a new ParseError subclass, modified code
+# to include new integration with format specifiers. updated header comments.
+#
 # 12-19-2018
 #
-# completed parser part of the script and the main graphing function. configuration
+# worked on parser part of the script and the main graphing function. configuration
 # file able to specify files, columns, and graph labels for the data and the resulting
 # text to put on the graph. currently looking into ways to improve fast_plot to change
 # the different kinds of plotting modes. changed name of file and program to xy_grapher,
@@ -107,8 +127,10 @@ _TOKENS = {
     "__FILE": "__file__",
     # declares immediate end of configuration file
     "__END": "__end__",
-    # declares parameters for the x, y and title of the ouput grapph
+    # declares parameters for the x, y and title of the output grapph
     "__PARAMS": "__params__",
+    # declares format for x/y series (in file order)
+    "__FORMAT": "__format__",
     # declares commented block
     "__OMIT": "#",
     # declares line break
@@ -157,6 +179,14 @@ class IllegalTokenError(ParseError):
             _line = _line)
         return None
 
+# error when graph format error is encountered; i.e. when the format specified
+# after _TOKENS["__FORMAT"] is illegal
+class GraphFormatError(ParseError):
+    def __init__(self,
+                 _msg = "illegal graph format specification", _line = "unknown"):
+        super(GraphFormatError, self).__init__(_msg = _msg, _line = _line)
+        return None
+
 # simple parser that reads line by line and tries to make sense of the tokens given.
 # returns a list of file tokens in the following format:
 #
@@ -168,6 +198,8 @@ class IllegalTokenError(ParseError):
 # and a list of graph parameters in the following format:
 #
 # ["x_axis", "y_axis", "title_text"]
+#
+# and a list of graph formatting specifier(s) (may be one or many)
 #
 # it's not the parser's job to check if the files exist or if any columns in the files
 # are valid, but it will enforce whether or not the files end with CSV_EXT or not.
@@ -186,17 +218,20 @@ def _cfparser(fin):
     ftoks = []
     # graph params
     g_params = None
+    # graph format
+    g_fmt = None
     # keep track of line number
     lnum = 0
-    # default series number: if no name is given for an x-y series, it will be
-    # given a default name
-    dnum = 0
+    # specifically keeps track of the format line
+    flnum = 0
     # is the file activated? (basically have we read _TOKENS["__HEAD"] yet?)
     is_active = False
     # is the file explicitly terminated? (this is recommended)
     is_exited = False
-    # did we already retrieve params for the graph from the file
+    # did we already retrieve params for the graph from the file?
     has_params = False
+    # did we retrieve formatting for the graph from the file?
+    has_format = False
     # input loop
     while (True):
         # read the raw line, with trailing spaces and then comments stripped
@@ -264,12 +299,17 @@ def _cfparser(fin):
             if (g_params == None):
                 raise ParseError(_msg = "premature incidence of {0} before {1}".format(
                     _TOKENS["__END"], _TOKENS["__PARAMS"]), _line = lnum)
-            # if len(ftoks) > 0, then set is_exited to True and break the loop
+            # if g_fmt is still None, we have encountered end token before we
+            # got the format, so raise a parse error
+            if (g_fmt == None):
+                raise ParseError(_msg = "premature incidence of {0} before {1}".format(
+                    _TOKENS["__END"], _TOKENS["__FORMAT"]), _line = lnum)
+            # if we pass all tests, then set is_exited to True and break the loop
             is_exited = True
             break
         
         # if clean_line is not equal to either of the standalone tokens, we should
-        # check to see if we can retrieve the file/params token
+        # check to see if we can retrieve the file, params, or format token
             
         # break the line by the token defined by _TOKENS["__MAJTS"], a major split
         maj_s = clean_line.split(_TOKENS["__MAJTS"])
@@ -279,9 +319,11 @@ def _cfparser(fin):
             # first check if token is empty (special handling for this one)
             if (maj_s[0] == _TOKENS["__EMPTY"]):
                 raise ParseError(_msg = "missing token", _line = lnum)
-            # if token is not _TOKENS["__FILE"], or _TOKENS["__PARAMS"] it is out of
-            # place. raise parse error
-            if (maj_s[0] != _TOKENS["__FILE"] and maj_s[0] != _TOKENS["__PARAMS"]):
+            # if token is not _TOKENS["__FILE"],  _TOKENS["__PARAMS"], or
+            # _TOKENS["__FORMAT"] it is out of place. raise parse error
+            if (maj_s[0] != _TOKENS["__FILE"] and
+                maj_s[0] != _TOKENS["__PARAMS"] and
+                maj_s[0] != _TOKENS["__FORMAT"]):
                 raise ParseError(
                     _msg = "out of place {} encountered".format(maj_s[0]), _line = lnum)
         # else we don't know this token and thus raise illegal token error
@@ -333,7 +375,6 @@ def _cfparser(fin):
                 # if len(ser_se) == 2, copy ser_se[1] and append it to the list
                 if (len(ser_se) == 2):
                     ser_se.append(ser_se[1])
-                    dnum += 1
                 # append ser_se to f_ent
                 f_ent.append(ser_se)
             # final format of the file entry should be as follows:
@@ -398,7 +439,66 @@ def _cfparser(fin):
             # set has_params to True
             has_params = True
 
-    ### end of the parsing loop
+        ### else if the token is the _TOKENS["__FORMAT"]
+        elif (maj_s[0] == _TOKENS["__FORMAT"]):
+            # if has_format is True, raise parse error
+            if (has_format == True):
+                raise ParseError(_msg = "duplicate {} token encountered".format(
+                    _TOKENS["__FORMAT"]), _line = lnum)
+            # if the length of maj_s is less or more than 2, parse error
+            if (len(maj_s) != 2):
+                raise ParseError(_msg = "expected 2 major tokens, {} "
+                                 "received".format(len(maj_s)), _line = lnum)
+            # it is sure that maj_s[0] is _TOKENS["__FORMAT"]. we must check if 
+            # maj_s[1] is empty: if so, raise parse error
+            if (maj_s[1] == _TOKENS["__EMPTY"]):
+                raise ParseError(_msg = "expected 2 major tokens, latter empty",
+                                 _line = lnum)
+        
+            # we know that neither of the two major tokens are empty. after we
+            # remove the optional _TOKENS["__FORMAT"] from maj_s[1], we will
+            # perform a series split on maj_s[1]
+
+            # split maj_s[1] by _TOKENS["__MINTS"], a minor split
+            fmt_s = maj_s[1].split(_TOKENS["__MINTS"])
+            # if the last token of fmt_s is empty, pop it
+            if (fmt_s[len(fmt_s) - 1] == _TOKENS["__EMPTY"]):
+                fmt_s.pop()
+            # if fmt_s is empty, raise parse error
+            if (len(fmt_s) == 0):
+                raise ParseError(_msg = "missing format params", _line = lnum)
+            # if the length of fmt_s > 1, raise parse error
+            if (len(fmt_s) > 1):
+                raise ParseError(_msg = "multiple sets of format params", _line = lnum)
+            # set fmt_s to its only element
+            fmt_s = fmt_s[0]
+            # perform a series split on fmt_s; set g_fmt
+            g_fmt = fmt_s.split(_TOKENS["__SERTS"])
+            # if there len(g_fmt) < 1, raise parse error
+            if (len(g_fmt) < 1):
+                raise ParseError(_msg = "positive number of format params required",
+                                 _line = lnum)
+            # check format parameters for each element of g_fmt; if any are empty,
+            # or have a length greater than 2 when len(g_fmt) > 1, raise error
+            for fp in g_fmt:
+                if (fp == _TOKENS["__EMPTY"]):
+                    raise GraphFormatError(_msg = "non-empty format strings required",
+                                     _line = lnum)
+                if (len(g_fmt) > 1 and len(fp) > 2):
+                    raise GraphFormatError(_msg = "format specifiers must be two "
+                                           "characters or less", _line = lnum)
+            # if g_fmt contains only one element, and that element does not equal
+            # fast_plot.AUTO_FORMAT and has a length > 2
+            if (len(g_fmt) == 1 and
+                (g_fmt[0] != fast_plot.AUTO_FORMAT and len(g_fmt[0]) > 2)):
+                raise GraphFormatError(_msg = "non-'{}' format specifier must be two "
+                                       "characters or less".format(
+                                           fast_plot.AUTO_FORMAT), _line = lnum)
+            # set flnum and set has_format to True
+            flnum = lnum
+            has_format = True
+
+    ### end of the parsing loop; clean up checks
     # if raw_line is blank but is_active is false, the config file was not
     # yet properly declared.
     if (is_active == False):
@@ -411,8 +511,21 @@ def _cfparser(fin):
     if (is_exited == False):
         print("{0}.{1}: {2} not explicitly terminated".format(
             PROGNAME, _CFPARSER_N, fin.name), file = sys.stderr)
-    # return the tokens and graph params
-    return ftoks, g_params
+
+    #    ["file_1", ["x1_1", "y1_1", "name1_1"], ... ["x1_k", "y1_k", "name1_k"]],
+    # count the number of xy-series to graph: number is equal to sum of elements
+    # in each file entry in ftoks minus the length of ftoks (file names included
+    # in each file entry)
+    nent = 0
+    for f_ent in ftoks:
+        nent += (len(f_ent) - 1)
+    # if the number of elements in g_fmt is not 1 and doesn't equal nent
+    if (len(g_fmt) != 1 and len(g_fmt) != nent):
+        raise GraphFormatError(_msg = "fatal: 1 or {0} graph format specifiers "
+                               "required, {1} received".format(nent, len(g_fmt)),
+                               _line = flnum)
+    # return the tokens, graph params, and graph format specifier(s)
+    return ftoks, g_params, g_fmt
 
 #===== end of parser code and variables =====#
 
@@ -511,9 +624,8 @@ if (__name__ == "__main__"):
     # ["file_1", ["x1_1", "y1_1", "name1_1"], ... ["x1_k", "y1_k", "name1_k]]
     # the g_params element is of the following format:
     # ["x_name", "y_name", "title_text"]
-    f_ents, g_params = _cfparser(fin)
-    #print(f_ents)
-    #print(g_params)
+    # and the graph formatting specifiers (may be list or single string)
+    f_ents, g_params, g_fmt = _cfparser(fin)
     # close config file; we don't need it anymore
     fin.close()
 
@@ -528,6 +640,11 @@ if (__name__ == "__main__"):
     xy_series = []
     # list of labels, must be same length as xy_series
     labels = []
+    # list of graph format specifiers to actually graph (some series may be improperly
+    # referenced and not exist in the specified file)
+    form_specs = []
+    # counter to track index of format specifiers
+    fsi = 0
     # validate each file entry and graph using fast_plot
     for ent in f_ents:
         # open file; handle any OS errors/exceptions
@@ -552,15 +669,23 @@ if (__name__ == "__main__"):
                 print("{0}: error: no y column '{1}' in {2}".format(
                     PROGNAME, x_lab, ent[0]), file = sys.stderr)
                 is_complete = False
-            # if the series is not complete, continue
-            if (is_complete == False):
-                continue
-            # else if it is complete, retrieve corresponding x/y series from df_ent,
-            # append as a two-element list to xy_series, and append corresponding
-            # label to labels
-            xy_series.append([df_ent[x_lab], df_ent[y_lab]])
-            labels.append(lab_lab)
+            # if the series is complete
+            if (is_complete == True):
+                # retrieve corresponding x/y series from df_ent, append as a
+                # two-element list to xy_series, append corresponding label
+                # to labels
+                xy_series.append([df_ent[x_lab], df_ent[y_lab]])
+                labels.append(lab_lab)
+                # if len(g_fmt) > 1
+                if (len(g_fmt) > 1):
+                    form_specs.append(g_fmt[fsi])
+            # if the series is not complete, do none of the above. increment
+            # fsi regardless of completion or not
+            fsi += 1
+
+    # one last check: if g_fmt has only one element, set form_specs to g_fmt[0]
+    if (len(g_fmt) == 1):
+        form_specs = g_fmt[0]
     # use fast_plot to write the series to a graph
-    fast_plot.xy_plot(xy_series, ll__ = labels, fmt_ = ["^", "^"],
-                      fout = fout_n, title = g_params[2],
-                      xlab = g_params[0], ylab = g_params[1])
+    fast_plot.xy_plot(xy_series, ll__ = labels, fmt_ = form_specs, fout = fout_n,
+                      title = g_params[2], xlab = g_params[0], ylab = g_params[1])
