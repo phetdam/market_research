@@ -1,0 +1,28 @@
+# note that the list of files must be relative to the location of options_grapher.py,
+# NOT to the location of the configuration file!
+__ogc__    # avoid this comment!
+
+
+# should be able to skip empty lines
+# random comment stuff here
+
+# note that graph names are the only portion of the file where whitespace is
+# significant. however, leading and trailing spaces will be stripped.
+
+__params__   : K, option_price            , \
+              Price of SPY options exp. 03-15-2019;
+
+
+# list of files
+__file__: ./data/spy_03-15-2019_calls.csv: \
+	  call_strike, call_ask; \
+	  call_strike, call_bid;
+####
+__file__: ./data/spy_03-15-2019_puts.csv    : put_strike, put_ask, BIG_memes; \
+	  				       put_strike, put_bid
+
+# what should we put here? parameters for the graph
+
+
+# this token is required to end the fucking ting yo
+__end__
