@@ -4,6 +4,11 @@
 #
 # Changelog:
 #
+# 12-20-2018
+#
+# added error checking to make sure that appropriate exceptions are raised when there
+# the given formats are zero characters in length
+#
 # 12-19-2018
 #
 # changed XY_PLOT_N to "xy_plot" to reflect function name change. added capability to
@@ -145,6 +150,10 @@ def xy_plot(gs__, w = 8, h = 4.5, fout = None, ll__ = None, fmt_ = AUTO_FORMAT,
             iter(fmt_)
             # if fmt_ is a string
             if (isinstance(fmt_, str)):
+                # if fmt_ (str) is less than 1 character, raise error
+                if (len(fmt_) < 1):
+                    raise IndexError("{0}.{1}: error: length of non-iterable fmt_ must "
+                                     "be positive".format(LIB_NAME, XY_PLOT_N))
                 # if fmt_ (str) is more than 2 characters, raise error
                 if (len(fmt_) > 2):
                     raise IndexError("{0}.{1}: error: length of non-iterable fmt_ must "
@@ -160,6 +169,11 @@ def xy_plot(gs__, w = 8, h = 4.5, fout = None, ll__ = None, fmt_ = AUTO_FORMAT,
                     if (not isinstance(e, str)):
                         raise TypeError("{0}.{1}: error: elements of iterable fmt_ must "
                                         "be of type str".format(LIB_NAME, XY_PLOT_N))
+                    # if length of e < 1
+                    if (len(e) < 1):
+                        raise IndexError("{0}.{1}: error: elements of iterable fmt_ must "
+                                         "be at least one character".format(
+                                             LIB_NAME, XY_PLOT_Nx))
                     # if length of e > 2
                     if (len(e) > 2):
                         raise IndexError("{0}.{1}: error: elements of iterable fmt_ must "
