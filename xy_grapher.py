@@ -49,7 +49,7 @@
 # text to put on the graph. currently looking into ways to improve fast_plot to change
 # the different kinds of plotting modes. changed name of file and program to xy_grapher,
 # as well as updating the different names of the extensions as needed. still need to do
-# work on the help string.
+# work on the help string. format passed to xy_plot() and parser incomplete.
 #
 # 12-10-2018
 #
@@ -561,5 +561,6 @@ if (__name__ == "__main__"):
             xy_series.append([df_ent[x_lab], df_ent[y_lab]])
             labels.append(lab_lab)
     # use fast_plot to write the series to a graph
-    fast_plot.xy_plot(xy_series, ll__ = labels, fout = fout_n, title = g_params[2],
+    fast_plot.xy_plot(xy_series, ll__ = labels, fmt_ = ["^", "^"],
+                      fout = fout_n, title = g_params[2],
                       xlab = g_params[0], ylab = g_params[1])
