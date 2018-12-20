@@ -4,6 +4,10 @@
 #
 # Changelog:
 #
+# 12-19-2018
+#
+# changed XY_PLOT_N to "xy_plot" to reflect function name change.
+#
 # 12-09-2018
 #
 # initial creation. method allows for plotting multiple pairs of series, setting the
@@ -27,7 +31,7 @@ import matplotlib.pyplot as plt
 LIB_NAME = "fast_plot"
 
 # function names
-XY_PLOT_N = "plot"
+XY_PLOT_N = "xy_plot"
 
 # list of acceptable picture formats to save to
 __IMG__EXTS = [".jpg", ".png"]
