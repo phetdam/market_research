@@ -1,0 +1,31 @@
+# note that the list of files must be relative to the location of options_grapher.py,
+# NOT to the location of the configuration file!
+__xyc__    # avoid this comment!
+
+
+# should be able to skip empty lines
+# random comment stuff here
+
+# note that graph names are the only portion of the file where whitespace is
+# significant. however, leading and trailing spaces will be stripped.
+
+__params__   : K, option_price            , \
+              Price of SPY options exp. 03-15-2019 on 12-09-2018 at S = 263.63;
+
+
+# list of files
+__file__: ./data/spy_03-15-2019_calls.csv: \
+	  call_strike, call_ask; #call_strike, call_bid;
+
+__file__: ./data/spy_03-15-2019_puts.csv    : put_strike, put_ask; #\
+#	  				      put_strike, put_bid
+
+# graph type formatting; note that AUTO_FORMAT is a special keyword that allows
+# pyplot to make a line graph the way it wants; also only format specifier that
+# can be more than 2 characters long.
+#__format__: ^, >, ^, >;
+__format__: ^, ^
+
+
+# this token is required to end the real ting yo
+__end__
