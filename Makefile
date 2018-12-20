@@ -4,7 +4,8 @@
 #
 # 12-19-2018
 #
-# added target for config file used by options_grapher
+# added target for config file used by options_grapher, and renamed options_grapher
+# to xy_grapher. its usage showed potential for more general applications.
 #
 # 12-09-2018
 #
@@ -25,7 +26,7 @@ RATE_MODELS_DIR = ./rate_models
 
 # targets
 SR1FSIM_T = sr1fsim
-OPTIONS_GRAPHER_T = options_grapher
+XY_GRAPHER_T = xy_grapher
 
 # deps
 SR1FSIM_DEPS = $(RATE_MODELS_DIR)/short_rate_1f.py
@@ -33,7 +34,7 @@ SR1FSIM_DEPS = $(RATE_MODELS_DIR)/short_rate_1f.py
 # args
 SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(TB_Y0_CSV):DTB3 -mt=cir -np=5
 #SR1FSIM_ARGS = -cf=$(DATA_DIR)/$(HY_Y0_CSV):BAMLHY -mt=cir -np=5
-OPTIONS_GRAPHER_ARGS = ./options/spy_03-15-2019_bopm.ogc
+OPTIONS_GRAPHER_ARGS = ./options/spy_03-15-2019_bopm.xyc
 
 # other variables
 # 3m treasury yields file (1981-2018), DTB3 is main data column
@@ -53,8 +54,8 @@ $(SR1FSIM_T): $(SR1FSIM_T).py $(SR1FSIM_DEPS) # helps catch name changes
 
 # options_grapher, a python script to graph the actual and modeled options prices
 # to graphically illustrate their differences
-$(OPTIONS_GRAPHER_T): $(OPTIONS_GRAPHER_T).py
-	$(PYC) $(PYFLAGS) $(OPTIONS_GRAPHER_T).py $(OPTIONS_GRAPHER_ARGS)
+$(XY_GRAPHER_T): $(XY_GRAPHER_T).py
+	$(PYC) $(PYFLAGS) $(XY_GRAPHER_T).py $(OPTIONS_GRAPHER_ARGS)
 
 # clean
 clean:
