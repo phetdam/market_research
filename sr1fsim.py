@@ -1,8 +1,13 @@
-# runs simulations of and plots single-factor short rate models (cir and vasicek).
+# runs simulations of and plots single-factor short rate models (cir,  vasicek).
 # can be specified data to calibrate models with, the type of model to run, and
 # the number of processes to generate.
 #
 # Changelog:
+#
+# 12-22-2018
+#
+# made sure all the lines were 80 characters long or less, and reformatted the
+# help string to be a multiline string.
 #
 # 12-09-2018
 #
@@ -15,22 +20,25 @@
 #
 # 10-27-2018
 #
-# added additional flag to specify the model to run (vasicek or cir). if model is not
-# specified, the default process will be a vasicek model. changed several variable
-# names and file name (from cir_main.py to sr1fsim.py) to reflect the more general
-# nature of the file. added list of acceptable models and some other variables.
+# added additional flag to specify the model to run (vasicek or cir). if model
+# is not specified, the default process will be a vasicek model. changed several
+# variable names and file name (from cir_main.py to sr1fsim.py) to reflect the
+# more general nature of the file. added list of acceptable models and some
+# other variables.
 #
 # 10-26-2018
 #
-# added additional flags and modes. can be calibrated off of a calibration file with
-# flag -cf=file_name:data_col, and run k processes with flag -np=k. basically added a
-# big chunk of boilerplate code to catch input errors. changed parameters from being
-# displayed in the legend for each individual process to being displayed in the title;
-# all processed in one graph have the same parameters anyways.
+# added additional flags and modes. can be calibrated off of a calibration file
+# with flag -cf=file_name:data_col, and run k processes with flag -np=k.
+# basically added a big chunk of boilerplate code to catch input errors. changed
+# parameters from being displayed in the legend for each individual process to
+# being displayed in the title; all processed in one graph have the same
+# parameters anyways.
 #
 # 10-24-2018
 #
-# initial creation; git commit. renamed to cir_main.py, modified usage, cleaned a little
+# initial creation; git commit. renamed to cir_main.py, modified usage, cleaned
+# a little
 
 # program name
 PROGNAME = "sr1fsim"
@@ -60,26 +68,29 @@ VAS_N = "vas"
 MTYPES = [CIR_N, VAS_N]
 
 # help string
-HELP_STR = ("Usage: {0} [ [ {1}=csv_file:data_col ] [ {2}=model ] [ {3}=k ] ]\n"
-            "       {0} [ {4} ]\n"
-            "generates stochastic short rate processes, by default 2, which will be\n"
-            "started with default parameters unless a data file (must be {5} file) and\n"
-            "a specified column of numerical data in that file is given, in which case\n"
-            "the process will be calibrated in an attempt to mimic the characteristics\n"
-            "of the data. a different number of processes k will be generated if specified.\n"
-            "default model run will be the vasicek model, unless a specific model is\n"
-            "specified at runtime with the {2} flag.\n\n"
-            "flags:\n\n"
-            "{1}\ttakes argument of form csv_file:data_col, where csv_file is the data\n"
-            "\tfile and data_col is the data column in the file to use for calibration.\n"
-            "{2}\ttakes argument model, which is the name of the model to run.\n"
-            "{3}\ttakes argument k, which is the number of processes to generate.\n"
-            "{4}\tprints this usage\n\n"
-            "acceptable arguments for flag {2}:\n\n"
-            "{6}\tcox-ingersoll-ross model\n"
-            "{7}\tvasicek model".format(PROGNAME, CF_FLAG, MT_FLAG, NP_FLAG, HELP_FLAG,
-                                        CSV_EXT, CIR_N, VAS_N)
-    )
+HELP_STR = """Usage: {0} [ [ {1}=csv_file:data_col ] [ {2}=model ] [ {3}=k ] ]
+       {0} [ {4} ]
+generates stochastic short rate processes, by default 2, which will be started
+with default parameters unless a data file (must be {5} file) and a specified
+column of numerical data in that file is given, in which case the process will
+be calibrated in an attempt to mimic the characteristics of the data. a
+different number of processes k will be generated if specified. default model
+run will be the vasicek model, unless a specific model is specified at runtime
+with the {2} flag.
+
+flags:
+
+{1}\ttakes argument of form csv_file:data_col, where csv_file is the data
+\tfile and data_col is the data column in the file to use for calibration.
+{2}\ttakes argument model, which is the name of the model to run.
+{3}\ttakes argument k, which is the number of processes to generate.
+{4}\tprints this usage
+
+acceptable arguments for flag {2}:
+
+{6}\tcox-ingersoll-ross model
+{7}\tvasicek model""".format(PROGNAME, CF_FLAG, MT_FLAG, NP_FLAG, HELP_FLAG,
+                             CSV_EXT, CIR_N, VAS_N)
 
 # indicates type of model being used; default "vas" (VAS_N)
 MTYPE = VAS_N
@@ -125,13 +136,14 @@ if (__name__ == "__main__"):
         pass
     # else too many arguments
     else:
-        print("{0}: too many arguments. type '{0} {1}' for usage.".format(PROGNAME, HELP_FLAG))
+        print("{0}: too many arguments. type '{0} {1}' for usage.".format(
+            PROGNAME, HELP_FLAG))
         quit()
 
     # will be a dataframe, if CF_FLAG is passed with the correct argument
     df = None
-    # boolean for if a calibration file and data column have been provided, and calibration
-    # should be performed
+    # boolean for if a calibration file and data column have been provided, and
+    # calibration should be performed
     c_model = False
     # boolean for unknown flag error
     uf_error = False
@@ -155,22 +167,24 @@ if (__name__ == "__main__"):
                     fnd = s_arg[1].split(":")
                     # if size of fnd != 2, print error and exit
                     if (len(fnd) != 2):
-                        print("{0}: error: argument to {1} must be of form file:col.".format(
-                            PROGNAME, CF_FLAG))
+                        print("{0}: error: argument to {1} must be of form "
+                              "file:col.".format(PROGNAME, CF_FLAG))
                         quit(1)
                     # unpack into file name, column name
                     fn, cn = fnd
                     # check file extension of file; must be CSV_EXT (.csv)
                     # if not, print error and exit
                     if (CSV_EXT not in fn):
-                        print("{0}: error: calibration file must be a {1} file.".format(
-                            PROGNAME, CSV_EXT))
+                        print("{0}: error: calibration file must be a {1} "
+                              "file.".format(PROGNAME, CSV_EXT))
                         quit(1)
-                    # else it is, so read into dataframe (let python handle errors)
+                    # else it is, so read into dataframe (let python handle
+                    # any errors that occur)
                     df = pd.read_csv(fn)
-                    # try to locate column in dataframe; if not, print error and exit
+                    # try to locate column in df; if not, print error and exit
                     if (cn not in df.columns):
-                        print("{0}: error: column {1} not in file {2}.".format(PROGNAME, cn, fn))
+                        print("{0}: error: column {1} not in file {2}.".format(
+                            PROGNAME, cn, fn))
                         quit(1)
                     # set c_model to True so that calibration will take place
                     c_model = True
@@ -181,20 +195,20 @@ if (__name__ == "__main__"):
                         PR_N = int(s_arg[1])
                     # print error and exit
                     except:
-                        print("{0}: error: argument to {1} expected to be positive int.".format(
-                            PROGNAME, NP_FLAG))
+                        print("{0}: error: argument to {1} expected to be "
+                              "positive int.".format(PROGNAME, NP_FLAG))
                         quit(1)
                     # if PR_N has been set to less than 1, print error and exit
                     if (PR_N < 1):
-                        print("{0}: error: argument to {1} must be positive.".format(
-                            PROGNAME, NP_FLAG))
+                        print("{0}: error: argument to {1} must be "
+                              "positive.".format(PROGNAME, NP_FLAG))
                         quit(1)
                 # else if s_arg[0] == MT_FLAG
                 elif (s_arg[0] == MT_FLAG):
-                    # if the argument is not in MTYPES (invalid), print error and exit
+                    # if the arg is not in MTYPES (invalid), print error + exit
                     if (s_arg[1] not in MTYPES):
-                        print("{0}: error: invalid argument to {1}. acceptable args: {2}".format(
-                            PROGNAME, MT_FLAG, MTYPES))
+                        print("{0}: error: invalid argument to {1}. acceptable "
+                              "args: {2}".format(PROGNAME, MT_FLAG, MTYPES))
                         quit(1)
                     # else we have a valid model, so set MTYPE to the argument
                     MTYPE = s_arg[1]
@@ -202,7 +216,7 @@ if (__name__ == "__main__"):
                 else:
                     uf_error = True
                     break
-                
+
             # else it's some random argument; set uf_error to True and break
             else:
                 uf_error = True
@@ -221,7 +235,7 @@ if (__name__ == "__main__"):
     # print model type and params
     print(MTYPE, MODEL_PARAM)
 
-    # determine which model to use by binding appropriate function name to return_pr
+    # determine which model to use; bind  appropriate function name to return_pr
     # if we have specified cir process
     if (MTYPE == CIR_N):
         return_pr = sr1f.return_cir
@@ -234,7 +248,8 @@ if (__name__ == "__main__"):
     fg = plt.figure(figsize = (12, 9))
     # for PR_N iterations
     for i in range(PR_N):
-        # get x (t) and y (r) series of generated process; element 0 is time series, 1 is r
+        # get x (t) and y (r) series of generated process; element 0 is time
+        # series, 1 is r
         x, y = return_pr(*MODEL_PARAM, cc = i, df = False)
         # plot the series; label each as MTYPE + "_i"
         plt.plot(x, y, label = "{0}_{1}".format(MTYPE, i))
