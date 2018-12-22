@@ -1,5 +1,5 @@
-# note that the list of files must be relative to the location of options_grapher.py,
-# NOT to the location of the configuration file!
+# note that the list of files must be relative to the location of
+# options_grapher.py, NOT to the location of the configuration file!
 __xyc__    # avoid this comment!
 
 
