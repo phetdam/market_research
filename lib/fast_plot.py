@@ -189,13 +189,13 @@ def xy_plot(gs__, w = 8, h = 4.5, fout = None, ll__ = None, fmt_ = AUTO_FORMAT,
                     # if length of e < 1
                     if (len(e) < 1):
                         raise IndexError("{0}.{1}: error: elements of iterable "
-                                         "fmt_ must be at least one "
-                                         "character".format(LIB_NAME, XY_PLOT_N))
+                                         "fmt_ must be at least one character"
+                                         "".format(LIB_NAME, XY_PLOT_N))
                     # if length of e > 2
                     if (len(e) > 2):
                         raise IndexError("{0}.{1}: error: elements of iterable "
-                                         "fmt_ must be two characters or "
-                                         "less".format(LIB_NAME, XY_PLOT_N))
+                                         "fmt_ must be two characters or less"
+                                         "".format(LIB_NAME, XY_PLOT_N))
                     # if fmt_ is iterable but not of the same length as gs__,
                     # raise error
                     if (len(fmt_) != len(gs__)):
@@ -212,8 +212,8 @@ def xy_plot(gs__, w = 8, h = 4.5, fout = None, ll__ = None, fmt_ = AUTO_FORMAT,
                             "str".format(LIB_NAME, XY_PLOT_N))
     # if height and width are nonpositive, print error and exit
     if (w < 1 or h < 1):
-        raise ValueError("{0}.{1}: error: cannot have nonpositive "
-                         "dimension".format(LIB_NAME, XY_PLOT_N))
+        raise ValueError("{0}.{1}: error: cannot have nonpositive dimension"
+                         "".format(LIB_NAME, XY_PLOT_N))
     # if xlab, ylab, or title are None, make them "" instead
     if (xlab == None):
         xlab = ""
@@ -225,8 +225,8 @@ def xy_plot(gs__, w = 8, h = 4.5, fout = None, ll__ = None, fmt_ = AUTO_FORMAT,
     if ((fontsize_x != None and fontsize_x < 1) or
         (fontsize_y != None and fontsize_y < 1) or
         (fontsize_t != None and fontsize_t < 1)):
-        raise ValueError("{0}.{1}: error: cannot have nonpositive font "
-                         "size".format(LIB_NAME, XY_PLOT_N))
+        raise ValueError("{0}.{1}: error: cannot have nonpositive font size"
+                         "".format(LIB_NAME, XY_PLOT_N))
     # make new figure w by h
     fg = plt.figure(figsize = (w, h))
     # if ll__ is None, set it to the default labels
