@@ -20,11 +20,18 @@ __file__: ./data/spy_03-15-2019_calls.csv: \
 __file__: ./data/spy_03-15-2019_puts.csv    : put_strike, put_ask; #\
 #	  				      put_strike, put_bid
 
+# this is file with the bopm (american) call prices
+__file__: ./data/spy_03-15-2019_bopm_calls.csv: \
+	  call_strike, bopm_call
+
+# later have to add the file with bopm american put prices
+#__file__: ./data/spy_03-15-2019_bopm_puts.csv: put_strike, bopm_put;
+
 # graph type formatting; note that AUTO_FORMAT is a special keyword that allows
 # pyplot to make a line graph the way it wants; also only format specifier that
 # can be more than 2 characters long.
 #__format__: ^, >, ^, >;
-__format__: ^, m^
+__format__: ^, m^, -
 
 
 # this token is required to end the real ting yo
