@@ -17,18 +17,18 @@ Data directory, with some .csv files.
 
 Shared general purpose code. Below is a list of modules and a brief description of what they do:
 
-__fast_plot:__ Wrapper around matplotlib that allows a flexible yet simply interface with the matplotlib.plot() function. Motivated by a need to quickly graph time series or two-dimensional data while offering a few graph customization options.
+ * __fast_plot:__ Wrapper around matplotlib that allows a flexible yet simply interface with the matplotlib.plot() function. Motivated by a need to quickly graph time series or two-dimensional data while offering a few graph customization options.
 
 ### options
 
 Contains options pricing models, mostly for the American or European flavor. List of modules and a brief descriptions of each:
 
-__bopm:__ Implemention of the original Cox-Rox-Rubenstein binomial tree options pricing model. Plans to allow integration with stochastic volatility instead of constant volatility. 
+ * __bopm:__ Implemention of the original Cox-Rox-Rubenstein binomial tree options pricing model. Plans to allow integration with stochastic volatility instead of constant volatility. 
 
 ### rate_models
 
-Contains interest rate models. List of modeuls and a brief description of each:
+Contains interest rate models. List of modules and a brief description of each:
 
-__short_rate_1f:__ Contains implementations for CIR and Vasicek one-factor interest rate models, as well as a very crude calibrating function. 
+ * __short_rate_1f:__ Contains implementations for CIR and Vasicek one-factor interest rate models, as well as a very crude calibrating function. 
 
 Note that this repository is a work in progress, and the contents and directory structure are subject to frequent changes. 
