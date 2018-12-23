@@ -17,9 +17,7 @@ Data directory, with some .csv files.
 
 Shared general purpose code. Below is a list of modules and a brief description of what they do:
 
-#### fast_plot.py
-
-Wrapper around matplotlib that allows a flexible yet simply interface with the matplotlib.plot() function. Motivated by a need to quickly graph time series or two-dimensional data while offering a few graph customization options.
+__fast_plot.p:__ Wrapper around matplotlib that allows a flexible yet simply interface with the matplotlib.plot() function. Motivated by a need to quickly graph time series or two-dimensional data while offering a few graph customization options.
 
 ### options
 
