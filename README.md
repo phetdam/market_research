@@ -23,7 +23,11 @@ Shared general purpose code. Below is a list of modules and a brief description 
 
 Contains options pricing models, mostly for the American or European flavor. List of modules and a brief descriptions of each:
 
- * __bopm:__ Implemention of the original Cox-Rox-Rubenstein binomial tree options pricing model. Plans to allow integration with stochastic volatility instead of constant volatility. 
+ * __bopm:__ Implemention of the original Cox-Rox-Rubenstein binomial tree options pricing model. Plans to allow integration with stochastic volatility instead of constant volatility.
+
+### plots
+
+Contains various plots created from running the models.
 
 ### rate_models
 
