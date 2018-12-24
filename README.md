@@ -35,4 +35,9 @@ Contains interest rate models. List of modules and a brief description of each:
 
  * __short_rate_1f:__ Contains implementations for CIR and Vasicek one-factor interest rate models, as well as a very crude calibrating function. 
 
+The top-level directory contains entry points and a Makefile configured to make those targets with predefined arguments. Below is a list of targets and a brief description of each:
+
+ * __sr1fsim:__ Simulates a few paths of a specifiable single-factor short rate model. Currently configured to simulate 5 paths of a Cox-Ingersoll-Ross process, (crudely) calibrated off of 3m Treasury yields. 
+ * __xy_grapher:__ Plots two-dimensional xy graphs (hence the name) from .csv file columns specified in a required configuration file. Currently configured to graph binomial options prices against market calls and puts on SPY expiring 03-15-2019.
+
 Note that this repository is a work in progress, and the contents and directory structure are subject to frequent changes. 
