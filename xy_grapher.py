@@ -56,13 +56,17 @@
 #
 # Changelog:
 #
+# 12-25-2018
+#
+# change '\' to '\\' in HELP_STR. must escape backslash.
+#
 # 12-22-2018
 #
 # decided to follow the 80 characters per line rule. changed all lines to make
 # sure that the rule is adhered to. reformatted the help string to be a multi
 # line string that would be easier to read (and type!!), and finally completed
 # the damn thing. changed header comments to reflect the fact that xy_grapher
-# has a scope beyond graphing option prices. 
+# has a scope beyond graphing option prices.
 #
 # 12-20-2018
 #
@@ -135,7 +139,7 @@ __file__: file_1.csv: xcol_1, ycol_1, series_label_1; \\
                       xcol_2, ycol_2, series_label_2; \\
                       ... xcol_k, ycol_k, series_label_k;
 
-the '\' character can be used to explicitly break lines. however, if there is
+the '\\' character can be used to explicitly break lines. however, if there is
 text following the line break character, an error will be thrown. the final
 semicolon can be optionally omitted. and if there is no series label given, the
 name of the y column will be used instead.
