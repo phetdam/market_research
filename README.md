@@ -18,7 +18,7 @@ Data directory, with some .csv files.
 Shared general purpose code. Below is a list of modules and a brief description of what they do:
 
  * __data_transform:__ Contains functions for performing transformations on data in a pandas DataFrame, for example taking the natural log of values in a column while ignoring values that are NaN values or outside of the natural log function's domain.
- * __fast_plot:__ Simple and flexible Wrapper around matplotlib.plot(). Motivated by a need to quickly graph time series or two-dimensional data while also having a few customization options available.
+ * __fast_plot:__ Simple and flexible wrapper around matplotlib.plot(). Motivated by a need to quickly graph time series or two-dimensional data while also having a few customization options available.
 
 ### options
 
