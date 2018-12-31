@@ -8,7 +8,7 @@
 #
 # happy new year's eve! completed the log() function, and wrote an additional
 # function _dfvalwarn() to help handle warnings when performing log() on cols
-# in a DataFrame. 
+# in a DataFrame. made correction that prevents setting with copy warning.
 #
 # 12-30-2018
 #
@@ -215,7 +215,7 @@ def log(df, cns, base = "e", inplace = True, overwrite = False, quiet = False):
         # or blank values will be replaced with NaN
         if (overwrite == True):
             df.loc[:, cn] = pd.to_numeric(df[cn], errors = "coerce")
-            col = df[cn]
+            col = df.loc[:, cn]
         # else create copy of series from the DataFrame and coerce to numeric
         else:
             col = pd.to_numeric(df[cn], errors = "coerce")
