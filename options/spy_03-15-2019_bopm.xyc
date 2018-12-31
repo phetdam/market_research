@@ -12,6 +12,12 @@ __xyc__    # avoid this comment!
 __params__   : K, option_price            , \
               Price of SPY options exp. 03-15-2019 on 12-09-2018 at S = 263.63;
 
+# notes on parameters used in price calculation:
+#
+# current (12-09-2018) price for SPY is 263.63. realized/historical volatility
+# used will be the CBOE 3m S&P volatility, which on that day was 22% (0.22).
+# we assume a 0.03 risk free rate, no dividend yield, and 3 month maturity
+# of the options. index options are european style. 
 
 # list of files
 __file__: ./data/spy_03-15-2019_calls.csv: \
@@ -22,7 +28,8 @@ __file__: ./data/spy_03-15-2019_puts.csv    : put_strike, put_ask; #\
 
 # this is file with the bopm (american) call prices
 __file__: ./data/spy_03-15-2019_bopm_calls.csv: \
-	  call_strike, bopm_call
+	  call_strike, bopm_call_ivol;   # using implied volatility
+	  call_strike, bopm_call_hvol    # using realized volatility
 
 # later have to add the file with bopm american put prices
 #__file__: ./data/spy_03-15-2019_bopm_puts.csv: put_strike, bopm_put;
@@ -31,7 +38,7 @@ __file__: ./data/spy_03-15-2019_bopm_calls.csv: \
 # pyplot to make a line graph the way it wants; also only format specifier that
 # can be more than 2 characters long.
 #__format__: ^, >, ^, >;
-__format__: ^, m^, -
+__format__: ^, m^, -, -
 
 
 # this token is required to end the real ting yo
