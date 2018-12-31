@@ -2,7 +2,7 @@
 
 by Derek Huang
 
-_last updated on: 12-24-2018_  
+_last updated on: 12-31-2018_  
 _file created on: 12-23-2018_
 
 The market_research repo consists of useful financial models and data, useful Python scripts implementing the models, visualizing the results, or simply performing useful general purpose tasks, and some resulting plots.
@@ -17,6 +17,7 @@ Data directory, with some .csv files.
 
 Shared general purpose code. Below is a list of modules and a brief description of what they do:
 
+ * __data_transform:__ Contains functions for performing transformations on data in a pandas DataFrame, for example taking the natural log of all the values in a column while ignoring NaN values and numeric values outside of the domain of the natural log function.
  * __fast_plot:__ Wrapper around matplotlib that allows a flexible yet simply interface with the matplotlib.plot() function. Motivated by a need to quickly graph time series or two-dimensional data while offering a few graph customization options.
 
 ### options
