@@ -2,10 +2,15 @@
 #
 # Changelog:
 #
+# 12-31-2018
+#
+# happy new year's eve! corrected some spacing.
+#
 # 12-19-2018
 #
-# added target for config file used by options_grapher, and renamed options_grapher
-# to xy_grapher. its usage showed potential for more general applications.
+# added target for config file used by options_grapher, and renamed
+# options_grapher to xy_grapher. its usage showed potential for more general
+# applications.
 #
 # 12-09-2018
 #
@@ -16,7 +21,7 @@
 CC = gcc
 CFLAGS = -Wall -g
 PYC = python
-PYFLAGS = 
+PYFLAGS =
 
 # directory targets
 # overall data directory
@@ -39,7 +44,7 @@ OPTIONS_GRAPHER_ARGS = ./options/spy_03-15-2019_bopm.xyc
 # other variables
 # 3m treasury yields file (1981-2018), DTB3 is main data column
 TB_Y0_CSV = treasury_3m_yield_1981-2018.csv
-# ice boaml high yield yields (1996-2018), BAMLHY is renamed main data col 
+# ice boaml high yield yields (1996-2018), BAMLHY is renamed main data col
 HY_Y0_CSV = ice-boaml_us_hy_yield_1996-2018.csv
 # ice boaml bbb option-adjusted spread (1996-2018), BAMLBBB is the main
 # data column (renamed from original)
@@ -52,8 +57,8 @@ dummy:
 $(SR1FSIM_T): $(SR1FSIM_T).py $(SR1FSIM_DEPS) # helps catch name changes
 	$(PYC) $(PYFLAGS) $(SR1FSIM_T).py $(SR1FSIM_ARGS)
 
-# options_grapher, a python script to graph the actual and modeled options prices
-# to graphically illustrate their differences
+# options_grapher, a python script to graph the actual and modeled options
+# prices to graphically illustrate their differences
 $(XY_GRAPHER_T): $(XY_GRAPHER_T).py
 	$(PYC) $(PYFLAGS) $(XY_GRAPHER_T).py $(OPTIONS_GRAPHER_ARGS)
 
