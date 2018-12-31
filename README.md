@@ -5,7 +5,7 @@ by Derek Huang
 _last updated on: 12-31-2018_  
 _file created on: 12-23-2018_
 
-![./plots/cir_0-crop.png](./plots/cir_0-crop.png)
+![./readme_banner.png](./readme_banner.png)
 
 The market_research repo consists of useful financial models and data, useful Python scripts implementing the models, visualizing the results, or simply performing useful general purpose tasks, and some resulting plots.
 
