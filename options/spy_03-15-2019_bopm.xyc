@@ -1,6 +1,35 @@
 # note that the list of files must be relative to the location of
 # options_grapher.py, NOT to the location of the configuration file!
-__xyc__    # avoid this comment!
+#
+# the original configuration file used to test xy_grapher; the messy format
+# was purposeful (to test the parser's robustness).
+#
+# note: the change log is an ex post facto change log, and may not be accurate.
+#
+# Changelog:
+#
+# 01-01-2019
+#
+# happy new year! added this change log, and added separate prices for options
+# calculated using implied and historical volatility. 
+#
+# 12-31-2018
+#
+# added notes on the assumptions used in the binomial options model prices.
+#
+# 12-23-2018
+#
+# added two lines for bopm call/put strikes and prices, with implied volatility
+# used in the calculation. call prices were already calculated, put prices tba.
+#
+# 12-22-2018
+#
+# changed line spacing to less than 80 characters.
+#
+# 12-20-2018
+#
+# initial commit. used to test xy_grapher
+__xyc__  
 
 
 # should be able to skip empty lines
@@ -17,28 +46,32 @@ __params__   : K, option_price            , \
 # current (12-09-2018) price for SPY is 263.63. realized/historical volatility
 # used will be the CBOE 3m S&P volatility, which on that day was 22% (0.22).
 # we assume a 0.03 risk free rate, no dividend yield, and 3 month maturity
-# of the options. index options are european style. 
+# of the options. ETF options are american style.
 
 # list of files
 __file__: ./data/spy_03-15-2019_calls.csv: \
 	  call_strike, call_ask; #call_strike, call_bid;
 
-__file__: ./data/spy_03-15-2019_puts.csv    : put_strike, put_ask; #\
-#	  				      put_strike, put_bid
+__file__: ./data/spy_03-15-2019_puts.csv    : \
+	  put_strike, put_ask; #put_strike, put_bid
 
 # this is file with the bopm (american) call prices
 __file__: ./data/spy_03-15-2019_bopm_calls.csv: \
-	  call_strike, bopm_call_ivol;   # using implied volatility
+	  call_strike, bopm_call_ivol; \ # using implied volatility
 	  call_strike, bopm_call_hvol    # using realized volatility
+	  
 
 # later have to add the file with bopm american put prices
-#__file__: ./data/spy_03-15-2019_bopm_puts.csv: put_strike, bopm_put;
+__file__: ./data/spy_03-15-2019_bopm_puts.csv: \
+	  put_strike, bopm_put_ivol; \
+	  put_strike, bopm_put_hvol;
+	  
 
 # graph type formatting; note that AUTO_FORMAT is a special keyword that allows
 # pyplot to make a line graph the way it wants; also only format specifier that
 # can be more than 2 characters long.
 #__format__: ^, >, ^, >;
-__format__: ^, m^, -, -
+__format__: ^, m^, --, -, --, -
 
 
 # this token is required to end the real ting yo
