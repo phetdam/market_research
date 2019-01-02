@@ -56,6 +56,13 @@
 #
 # Changelog:
 #
+# 01-01-2019
+#
+# happy new year! corrected parse error that would be raised because of an
+# improper token parsing order, i.e. stripping whitespace (right) before
+# comments, which would make lines that containied the line break token with
+# comments right after unreadable for the parser.
+#
 # 12-25-2018
 #
 # change '\' to '\\' in HELP_STR. must escape backslash.
