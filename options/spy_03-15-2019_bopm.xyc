@@ -11,7 +11,7 @@
 # 01-01-2019
 #
 # happy new year! added this change log, and added separate prices for options
-# calculated using implied and historical volatility. 
+# calculated using implied and historical volatility.
 #
 # 12-31-2018
 #
@@ -59,13 +59,11 @@ __file__: ./data/spy_03-15-2019_puts.csv    : \
 __file__: ./data/spy_03-15-2019_bopm_calls.csv: \
 	  call_strike, bopm_call_ivol; \ # using implied volatility
 	  call_strike, bopm_call_hvol    # using realized volatility
-	  
 
 # later have to add the file with bopm american put prices
 __file__: ./data/spy_03-15-2019_bopm_puts.csv: \
 	  put_strike, bopm_put_ivol; \
 	  put_strike, bopm_put_hvol;
-	  
 
 # graph type formatting; note that AUTO_FORMAT is a special keyword that allows
 # pyplot to make a line graph the way it wants; also only format specifier that
@@ -74,5 +72,5 @@ __file__: ./data/spy_03-15-2019_bopm_puts.csv: \
 __format__: ^, m^, --, -, --, -
 
 
-# this token is required to end the real ting yo
+# this token is required to end the config file
 __end__
