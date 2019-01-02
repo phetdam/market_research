@@ -315,15 +315,16 @@ def _cfparser(fin):
                                  _line = lnum)
             # else break
             break
-        # modify raw_line by stripping trailing spaces and comments
-        raw_line = raw_line.rstrip().split(_TOKENS["__OMIT"])[0]
+        # modify raw_line by stripping comments and then trailing spaces; this
+        # order is important because line breaks may be followed be comments!!
+        raw_line = raw_line.split(_TOKENS["__OMIT"])[0].rstrip()
         # if raw_line ends with _TOKENS["__LBREAK"], split off the line break
         # token and continue appending lines until we hit EOF or the next string
         # does not end with the break token
         if (raw_line.endswith(_TOKENS["__LBREAK"])):
             raw_line = raw_line.split(_TOKENS["__LBREAK"])[0]
             while (True):
-                raw_next = fin.readline().rstrip().split(_TOKENS["__OMIT"])[0]
+                raw_next = fin.readline().split(_TOKENS["__OMIT"])[0].rstrip()
                 lnum += 1
                 # if we have hit EOF
                 if (raw_next == _TOKENS["__EMPTY"]):
