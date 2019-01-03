@@ -1,8 +1,16 @@
-# library for performing some quick data transformations on columns in a pandas
-# dataframe. intended only for numerical data, but may be extended for
-# manipulation of some categorical data as well.
-#
+"""
+the data_transform module is a collection of functions for performing quick data
+transformations on columns in a pandas dataframe. intended currently only for
+numerical data, but may be extended for manipulation of some categorical data
+in the future.
+"""
 # Changelog:
+#
+# 01-03-2019
+#
+# separated module description from change log and made module description a
+# docstring instead of a commented block. changed function comment blocks into
+# docstrings, and made the library name and all function names private.
 #
 # 12-31-2018
 #
@@ -27,73 +35,76 @@ import pandas as pd
 import sys
 
 # library  name
-LIBNAME = "data_transform"
+_LIBNAME = "data_transform"
 
 # function names
 _DFVALWARN_N = "_dfvalwarn"
-LOG_N = "log"
+_LOG_N = "log"
 
-# standardized function for issuing warnings when a function operating on a
-# DataFrame encounters an illegal value that the user should be warned about,
-# but which does not halt the operation of the function. messages will have the
-# following format (printed to stderr):
-#
-# libname.funcname: DataFrame df, id = id_n: df[col][index] <qualifier>
-#
-# note that if id_ismloc is True, then the message format will look like this:
-#
-# libname.funcname: DataFrame df at 0x<mem loc>: df[col][index] <qualifier>
-#
-# parameters:
-#
-# df          required dataframe
-# qual        qualifier for warning message, default "invalid"
-# lib_n       name of the library the function is in, default "anon_lib"
-# func_n      name of the function that encountered the error in the DataFrame,
-#             default "anon_func"
-# df_id       id of the DataFrame; can be found by passing id(df). default
-#             "unknown"
-# id_ismloc   default False. set to True for different message formatting. note
-#             that with CPython, formatting id(df) as hex will give the memory
-#             location of the DataFrame.
-# col         label/index of offending column in DataFrame, default "??"
-# row         index of offending row in DataFrame, default "??"
+
 def _dfvalwarn(df, qual = "invalid", lib_n = "anon_lib", func_n = "anon_func",
                df_id = "unknown", id_ismloc = False, col = "??", row = "??"):
+    """
+    standardized function for issuing warnings when a function operating on a
+    DataFrame encounters an illegal value that the user should be warned about,
+    but which does not halt the operation of the function. messages will have
+    the following format (printed to stderr):
+
+    libname.funcname: DataFrame df, id = id_n: df[col][index] <qualifier>
+
+    note that if id_ismloc is True, then the message format will look like this:
+
+    libname.funcname: DataFrame df at 0x<mem loc>: df[col][index] <qualifier>
+
+    parameters:
+
+    df          required dataframe
+    qual        qualifier for warning message, default "invalid"
+    lib_n       name of the library the function is in, default "anon_lib"
+    func_n      name of the function that encountered the error in the DataFrame
+                with default value "anon_func"
+    df_id       id of the DataFrame; can be found by passing id(df). default
+                "unknown"
+    id_ismloc   default False. set to True for different message formatting.
+                note that with CPython, formatting id(df) as hex will give the
+                memory location of the DataFrame.
+    col         label/index of offending column in DataFrame, default "??"
+    row         index of offending row in DataFrame, default "??"
+    """
     # if df is None
     if (df is None):
         raise ValueError("{0}.{1}: error: DataFrame required, None passed"
-                         "".format(LIBNAME, _DFVALWARN_N))
+                         "".format(_LIBNAME, _DFVALWARN_N))
     # if df is not a DataFrame, raise TypeError
     if (not isinstance(df, pd.DataFrame)):
         raise TypeError("{0}.{1}: error: DataFrame required, {2} passed"
-                        "".format(LIBNAME, _DFVALWARN_N, type(df)))
+                        "".format(_LIBNAME, _DFVALWARN_N, type(df)))
     # check that qualifier is a string
     if (not isinstance(qual, str)):
         raise TypeError("{0}.{1}: error: qual must be type str".format(
-            LIBNAME, _DFVALWARN_N))
+            _LIBNAME, _DFVALWARN_N))
     # check that both lib_n and func_n are both strings
     if (not isinstance(lib_n, str)):
         raise TypeError("{0}.{1}: error: lib_n must be type str".format(
-            LIBNAME, _DFVALWARN_N))
+            _LIBNAME, _DFVALWARN_N))
     if (not isinstance(func_n, str)):
         raise TypeError("{0}.{1}: error: func_n must be type str".format(
-            LIBNAME, _DFVALWARN_N))
+            _LIBNAME, _DFVALWARN_N))
     # check that if df_id is not "unknown" that df_id is an int
     if (df_id != "unknown" and not isinstance(df_id, int)):
         raise TypeError("{0}.{1}: error: df_id must be int; use function id()"
-                        "".format(LIBNAME, _DFVALWARN_N))
+                        "".format(_LIBNAME, _DFVALWARN_N))
     # check that id_ismloc is boolean
     if (not isinstance(id_ismloc, bool)):
         raise TypeError("{0}.{1}: error: id_ismloc must be bool".format(
-            LIBNAME, _DFVALWARN_N))
+            _LIBNAME, _DFVALWARN_N))
     # check that col and row must be string or int
     if ((not isinstance(col, str)) and (not isinstance(col, int))):
         raise TypeError("{0}.{1}: error: col must be str or int".format(
-            LIBNAME, _DFVALWARN_N))
+            _LIBNAME, _DFVALWARN_N))
     if ((not isinstance(row, str)) and (not isinstance(row, int))):
         raise TypeError("{0}.{1}: error: row must be str or int".format(
-            LIBNAME, _DFVALWARN_N))
+            _LIBNAME, _DFVALWARN_N))
     # set the correct format for reporting the df_id or memory location of df
     # if id_ismloc is True
     if (id_ismloc == True):
@@ -123,49 +134,51 @@ def _dfvalwarn(df, qual = "invalid", lib_n = "anon_lib", func_n = "anon_func",
         lib_n, func_n, id_fmt, col_fmt, row_fmt, qual), file = sys.stderr)
     return None
 
-# function that takes the natural (or base k) log of specified columns from a
-# pandas dataframe. can either insert these columns next to the original columns
-# in the dataframe, or return a copy of the new dataframe with the newly
-# generated log columns. generated columns will be named per the following
-# convention: colname_[logk][ln]
-#
-# parameters:
-#
-# df          required dataframe to operate on
-# cns         required parameter; either a single value or a list of values that
-#             are column names in the dataframe that should have their [natural]
-#             log or base k log taken.
-# base        optional named parameter, default "e". can be set to integers
-#             for logarithms with different bases.
-# inplace     optional named parameter, default True. can be set to False to
-#             force log() to return a modified copy of the DataFrame df. the
-#             function will return None is inplace is True, and will return the
-#             modified copy of the original DataFrame if inplace is False.
-# overwrite   optional named parameter, default False. set to True to overwrite
-#             and rename the original columns in cns with the renamed and
-#             transformed columns.
-# quiet       optional named parameter, default False. set to True to suppress
-#             warnings about NaN or nonpositive values for all  columns within
-#             cns.
 def log(df, cns, base = "e", inplace = True, overwrite = False, quiet = False):
+    """
+    function that takes the natural (or base k) log of specified columns from a
+    pandas dataframe. can either insert these columns next to the original
+    columns in the dataframe, or return a copy of the new dataframe with the
+    newly generated log columns. generated columns will be named per the
+    following convention: colname_[logk][ln]
+
+    parameters:
+
+    df          required dataframe to operate on
+    cns         required parameter; either a single value or a list of values
+                that are column names in the dataframe that should have their
+                [natural] log or base k log taken.
+    base        optional named parameter, default "e". can be set to integers
+                for logarithms with different bases.
+    inplace     optional named parameter, default True. can be set to False to
+                force log() to return a modified copy of the DataFrame df. the
+                function will return None is inplace is True, and will return
+                the modified copy of the original DataFrame if inplace is False.
+    overwrite   optional named parameter, default False. set to True to overwrite
+                and rename the original columns in cns with the renamed and
+                transformed columns.
+    quiet       optional named parameter, default False. set to True to suppress
+                warnings about NaN or nonpositive values for all  columns within
+                cns.
+    """
     # if df is None, raise ValueError
     if (df is None):
         raise ValueError("{0}.{1}: error: DataFrame required, None passed"
-                         "".format(LIBNAME, LOG_N))
+                         "".format(_LIBNAME, _LOG_N))
     # if df is not a DataFrame, raise TypeError
     if (not isinstance(df, pd.DataFrame)):
         raise TypeError("{0}.{1}: error: DataFrame required, {2} passed"
-                        "".format(LIBNAME, LOG_N, type(df)))
+                        "".format(_LIBNAME, _LOG_N, type(df)))
     # check if inplace, overwrite, or quiet are boolean
     if (not isinstance(inplace, bool)):
         raise TypeError("{0}.{1}: error: bool required, {2} passed".format(
-            LIBNAME, LOG_N, type(inplace)))
+            _LIBNAME, _LOG_N, type(inplace)))
     if (not isinstance(overwrite, bool)):
         raise TypeError("{0}.{1}: error: bool required, {2} passed".format(
-            LIBNAME, LOG_N, type(overwrite)))
+            _LIBNAME, _LOG_N, type(overwrite)))
     if (not isinstance(quiet, bool)):
         raise TypeError("{0}.{1}: error: bool required, {2} passed".format(
-            LIBNAME, LOG_N, type(quiet)))
+            _LIBNAME, _LOG_N, type(quiet)))
     # if inplace is False, set df to a deep copy of df
     if (inplace == False):
         df = df.copy()
@@ -188,11 +201,11 @@ def log(df, cns, base = "e", inplace = True, overwrite = False, quiet = False):
         # check if base == 1 or <= 0
         if (base == 1 or base <= 0):
             raise ValueError("{0}.{1}: error: invalid logarithm base ({2})"
-                             "".format(LIBNAME, LOG_N, base))
+                             "".format(_LIBNAME, _LOG_N, base))
     # else raise TypeError
     else:
         raise TypeError("{0}.{1}: error: float base required, {2} passed"
-                        "".format(LIBNAME, LOG_N, type(base)))
+                        "".format(_LIBNAME, _LOG_N, type(base)))
     # check that each column in cns is in df.columns
     # if a single column is not found
     col_err = False
@@ -206,7 +219,7 @@ def log(df, cns, base = "e", inplace = True, overwrite = False, quiet = False):
     # if col_err is True, raise KeyError and note how many columns are missing
     if (col_err == True):
         raise KeyError("{0}.{1}: error: columns {2} not found".format(
-            LIBNAME, LOG_N, err_cols))
+            _LIBNAME, _LOG_N, err_cols))
     # for each column, create a copy, forcibly convert to numeric (replace all
     # non-numeric values with NaN), and then process logarithms as necessary
     # before assigning resulting column to df
@@ -225,16 +238,16 @@ def log(df, cns, base = "e", inplace = True, overwrite = False, quiet = False):
             if (math.isnan(col.iloc[i])):
                 # if quiet is False, print warning
                 if (quiet == False):
-                    _dfvalwarn(df, qual = "is NaN", lib_n = LIBNAME,
-                               func_n = LOG_N, df_id = id(df), id_ismloc = True,
+                    _dfvalwarn(df, qual = "is NaN", lib_n = _LIBNAME,
+                               func_n = _LOG_N, df_id = id(df), id_ismloc = True,
                                col = cn, row = i)
                 # col[i] already NaN so don't do anything
             # else if element is 0
             elif (col.iloc[i] == 0):
                 # if quiet is False, print warning
                 if (quiet == False):
-                    _dfvalwarn(df, qual = "is 0", lib_n = LIBNAME,
-                               func_n = LOG_N, df_id = id(df), id_ismloc = True,
+                    _dfvalwarn(df, qual = "is 0", lib_n = _LIBNAME,
+                               func_n = _LOG_N, df_id = id(df), id_ismloc = True,
                                col = cn, row = i)
                 # set col[i] to np.NINF
                 col.iloc[i] = np.NINF
@@ -242,8 +255,8 @@ def log(df, cns, base = "e", inplace = True, overwrite = False, quiet = False):
             elif (col.iloc[i] <= 0):
                 # if quiet is False, print warning
                 if (quiet == False):
-                    _dfvalwarn(df, qual = "< 0", lib_n = LIBNAME,
-                               func_n = LOG_N, df_id = id(df), id_ismloc = True,
+                    _dfvalwarn(df, qual = "< 0", lib_n = _LIBNAME,
+                               func_n = _LOG_N, df_id = id(df), id_ismloc = True,
                                col = cn, row = i)
                 # set col[i] to np.nan
                 col.iloc[i] = np.nan
