@@ -7,6 +7,19 @@ stochastic process for the underlying as well, refer to stochastic_option
 #
 # Changelog:
 #
+# 01-27-2019
+#
+# made final edits to formula; although prices deviate significantly from those
+# in the original cox-rox-rubinstein paper, when implied vol is used as the vol
+# parameter they return market prices closely.
+#
+# 01-24-2019
+#
+# added option d_dt parameter that allows one to specify how many time steps per
+# day to simulate (tree height accordingly adjusted), default 1. suggested not
+# to increase fidelity beyond 20 per day; seems to have little effect on the
+# price precision. edited function docstring to make descriptions more clear.
+#
 # 01-04-2019
 #
 # happy 2019! adjusted spacing, changed commented blocks to docstring as needed,
@@ -35,7 +48,8 @@ _option_types = ["call", "put"]
 # allowable option flavors
 _option_flavors = ["american", "european"]
 
-def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "european"):
+def option_price(S_, sigma, r, K, T_, q = 0, d_dt = 1, is_type = "call",
+                 flavor = "european"):
     """
     implementation of the binomial call option pricing model. uses the original
     cox/ross/rubenstein binomial tree method. time step assumed to be one 1 day.
@@ -45,7 +59,10 @@ def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "europea
     S_        price of underlying at time 0.
     sigma     constant underlying volatility of S
     r         constant risk free rate
-    q         constant dividend (or other) yield
+    q         optional constant dividend (or other) yield, default 0
+    d_dt      optional number of time steps per day (adjusts fidelity and height
+              of the binomial tree), default 1. recommended to make d_dt < 20
+              because there is no need for excess fidelity
     K         strike price of the option
     T_        no. months until expiration; month/year standard is 30/360
     is_type   "call", "put" (default "call")
@@ -73,6 +90,14 @@ def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "europea
     if (T_ < 0):
         raise ValueError("{0}.{1}: error: cannot have negative time to expiry"
                          "".format(_LIB_NAME, _OPTION_PRICE_N))
+    # cannot have negative dividend rate
+    if (q < 0):
+        raise ValueError("{0}.{1}: error: cannot have negative dividend yield"
+                         "".format(_LIB_NAME, _OPTION_PRICE_N))
+    # cannot have d_dt be less than 1
+    if (d_dt < 1):
+        raise ValueError("{0}.{1}: error: cannot have less than one period per "
+                         "day".format(_LIB_NAME, _OPTION_PRICE_N))
     # if is_type is not in _option_types
     if (is_type not in _option_types):
         raise ValueError("{0}.{1}: error: option type can only be {2}".format(
@@ -81,14 +106,16 @@ def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "europea
     if (flavor not in _option_flavors):
         raise ValueError("{0}.{1}: error: option flavor can only be {2}".format(
             _LIB_NAME, _OPTION_PRICE_N, _option_flavors))
-    # number of days until option expiration is 30 * T_
-    n = 30 * T_
+    # number of days until option expiration is 30 * T_; also controls height of
+    # the generated binomial tree (multiplied by d_dt)
+    n = 30 * d_dt * T_
     # if n is fractional, print error and exit
     if (int(n) != float(n)):
         raise ValueError("{0}.{1}: error: cannot have fractional number of days"
                          " to expiration".format(_LIB_NAME, _OPTION_PRICE_N))
-    # size of time step is equal to one day; units must be in years)
-    dt = 1 / 360
+    # size of time step is equal to one day; units must be in years. however,
+    # time step can be adjusted by d_dt parameter
+    dt = 1 / 360 / d_dt
     # number of final nodes for option values is n + 1
     vals = np.empty(n + 1)
     # up factor; down factor is the inverse of the up factor
@@ -120,8 +147,8 @@ def option_price(S_, sigma, r, K, T_, q = 0, is_type = "call", flavor = "europea
                 # while put[i + 1] < put[i]
                 vals[j] = math.exp(-r * dt) * (p_u * vals[j + 1] + p_d * vals[j])
                 # if the option is american, there each vals[j] has an a value
-                # that can be attained during exercise (S[j] at n - i - 1 minus K),
-                # so the value of the option would be max(ex_val[j], vals[j])
+                # that can be attained during exercise (S[j] at n - i - 1 minus
+                # K), so the value of the option would be max(ex_val[j], vals[j])
                 if (flavor == "american"):
                     vals[j] = max(vals[j], S_ * pow(u, 2 * j - n + i + 1) - K)
     # else if the option is a put option
