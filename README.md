@@ -4,7 +4,7 @@
 
 by Derek Huang
 
-_last updated on: 01-18-2019_  
+_last updated on: 10-12-2019_  
 _file created on: 12-23-2018_
 
 The market_research repo consists of useful financial models and data, useful Python scripts implementing the models, visualizing the results, or simply performing useful general purpose tasks, and some resulting plots.
@@ -21,10 +21,6 @@ Shared general purpose code. Below is a list of modules and a brief description 
 
  * __data_transform:__ Contains functions for performing transformations on data in a pandas DataFrame, for example taking the natural log of values in a column while ignoring values that are NaN values or outside of the natural log function's domain.
  * __fast_plot:__ Simple and flexible wrapper around matplotlib.plot(). Motivated by a need to quickly graph time series or two-dimensional data while also having a few customization options available.
-
-### math
-
-Directory containing some of my own informal mathematical work. Any errors present are wholly my own.
 
 ### options
 
@@ -47,4 +43,4 @@ The top-level directory contains entry points and a Makefile configured to make 
  * __sr1fsim:__ Simulates a few paths of a specifiable single-factor short rate model. Currently configured to simulate 5 paths of a Cox-Ingersoll-Ross process, (crudely) calibrated off of 3m Treasury yields. 
  * __xy_grapher:__ Plots two-dimensional xy graphs (hence the name) from .csv file columns specified in a required configuration file. Currently configured to graph binomial options prices against market calls and puts on SPY expiring 03-15-2019.
 
-Note that this repository is a work in progress, and the contents and directory structure are subject to frequent changes. 
+Note that this repository is a work in progress, and the contents and directory structure are subject to frequent changes. Used to also contain the __math__ directory, which has gained enough material to be its own separate repository now.
